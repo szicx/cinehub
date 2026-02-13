@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CinemaHub - Streaming & Download</title>
+    <title>CinéHub - Streaming & Download</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -20,6 +20,10 @@
                             card: '#1a1a24',
                             hover: '#22222e',
                             border: '#2a2a38',
+                        },
+                        accent: {
+                            primary: '#e50914',
+                            secondary: '#b20710',
                         }
                     }
                 }
@@ -42,6 +46,58 @@
             letter-spacing: 3px;
         }
         
+        /* ========== HEADER FIXE ========== */
+        
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+            background: rgba(10, 10, 15, 0.85);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        main {
+            margin-top: 140px; /* Hauteur du header */
+        }
+        
+        /* ========== TABS ========== */
+        
+        .tab-button {
+            position: relative;
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: rgba(255, 255, 255, 0.5);
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-button:hover {
+            color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .tab-button.active {
+            color: #ffffff;
+        }
+        
+        .tab-button.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #e50914, #b20710);
+            box-shadow: 0 0 10px rgba(229, 9, 20, 0.6);
+        }
+        
         /* ========== ANIMATIONS ========== */
         
         @keyframes fadeInUp {
@@ -57,6 +113,15 @@
         
         .fade-in-up {
             animation: fadeInUp 0.5s ease-out forwards;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.4s ease-out;
         }
         
         /* ========== CARDS ========== */
@@ -101,6 +166,10 @@
         
         .cinema-card:hover .site-title-glow {
             filter: brightness(1.3) drop-shadow(0 0 10px currentColor);
+        }
+        
+        .accent-glow {
+            text-shadow: 0 0 20px rgba(229, 9, 20, 0.6);
         }
         
         /* ========== BADGES ========== */
@@ -183,6 +252,19 @@
                 opacity: 0;
             }
         }
+        
+        /* ========== RESPONSIVE ========== */
+        
+        @media (max-width: 768px) {
+            main {
+                margin-top: 160px;
+            }
+            
+            .tab-button {
+                padding: 0.5rem 1rem;
+                font-size: 0.75rem;
+            }
+        }
     </style>
 </head>
 
@@ -191,29 +273,41 @@
     <!-- Particles -->
     <div id="particles"></div>
     
-    <!-- Main Content -->
-    <div class="relative z-10">
-        
-        <!-- Header -->
-        <header class="border-b border-white/5 py-8 mb-12 sticky top-0 z-50 backdrop-blur-xl bg-dark-bg/60">
-            <div class="container mx-auto px-4">
-                <div class="flex items-center justify-between">
-                    <div>
-                        <h1 class="text-5xl font-cinema text-white tracking-wider">
-                            CINEMAHUB
-                        </h1>
-                        <p class="text-gray-500 text-sm mt-1">Streaming & Download Center</p>
-                    </div>
-                    <div class="hidden md:flex items-center gap-2">
-                        <div class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
-                        <span class="text-gray-500 text-xs uppercase tracking-wider">Live</span>
-                    </div>
+    <!-- Header Fixe -->
+    <header>
+        <div class="container mx-auto px-4 py-6">
+            <!-- Logo -->
+            <div class="flex items-center justify-between mb-4">
+                <div>
+                    <h1 class="text-5xl font-cinema tracking-wider">
+                        <span class="text-accent-primary accent-glow">CINÉ</span><span class="text-white">HUB</span>
+                    </h1>
+                    <p class="text-gray-500 text-sm mt-1">Streaming & Download Center</p>
+                </div>
+                <div class="hidden md:flex items-center gap-2">
+                    <div class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+                    <span class="text-gray-500 text-xs uppercase tracking-wider">Live</span>
                 </div>
             </div>
-        </header>
+            
+            <!-- Navigation Tabs -->
+            <nav class="flex items-center gap-2 border-t border-white/5 pt-2">
+                <button onclick="showTab('streaming')" id="tab-streaming" class="tab-button active">
+                    <span>📺</span> Streaming
+                </button>
+                <button onclick="showTab('download')" id="tab-download" class="tab-button">
+                    <span>📥</span> Téléchargement
+                </button>
+                <button onclick="showTab('dns')" id="tab-dns" class="tab-button">
+                    <span>🔧</span> DNS
+                </button>
+            </nav>
+        </div>
+    </header>
 
-        <!-- Main -->
-        <main class="container mx-auto px-4 pb-16">
+    <!-- Main Content (zone scrollable) -->
+    <main class="relative z-10">
+        <div class="container mx-auto px-4 pb-16">
             
             <!-- Loading -->
             <div id="loading" class="text-center py-20">
@@ -229,11 +323,12 @@
             </div>
 
             <!-- Section Streaming -->
-            <section id="streaming-section" class="hidden mb-16">
+            <section id="section-streaming" class="hidden fade-in">
                 <div class="mb-8">
                     <h2 class="text-3xl font-cinema text-white tracking-wider">
                         STREAMING
                     </h2>
+                    <p class="text-gray-500 text-sm mt-2">Regarder en ligne</p>
                 </div>
                 <div id="streaming-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                     <!-- Cards streaming -->
@@ -241,11 +336,12 @@
             </section>
 
             <!-- Section Download -->
-            <section id="download-section" class="hidden mb-16">
+            <section id="section-download" class="hidden fade-in">
                 <div class="mb-8">
                     <h2 class="text-3xl font-cinema text-white tracking-wider">
                         TÉLÉCHARGEMENT
                     </h2>
+                    <p class="text-gray-500 text-sm mt-2">Télécharger en local</p>
                 </div>
                 <div id="download-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                     <!-- Cards download -->
@@ -253,28 +349,28 @@
             </section>
 
             <!-- Section DNS -->
-            <section id="dns-section" class="hidden">
+            <section id="section-dns" class="hidden fade-in">
                 <div class="mb-8">
                     <h2 class="text-3xl font-cinema text-white tracking-wider">
                         DNS
                     </h2>
+                    <p class="text-gray-500 text-sm mt-2">Configuration DNS pour débloquer l'accès</p>
                 </div>
                 <div id="dns-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                     <!-- Cards DNS -->
                 </div>
             </section>
-        </main>
+        </div>
+    </main>
 
-        <!-- Footer -->
-        <footer class="border-t border-white/5 py-6 mt-20">
-            <div class="container mx-auto px-4 text-center">
-                <p class="text-gray-600 text-xs">
-                    CinemaHub © 2026
-                </p>
-            </div>
-        </footer>
-        
-    </div>
+    <!-- Footer -->
+    <footer class="relative z-10 border-t border-white/5 py-6 mt-20">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-gray-600 text-xs">
+                CinéHub © 2026
+            </p>
+        </div>
+    </footer>
 
     <!-- JavaScript -->
     <script>
@@ -350,52 +446,168 @@
             }
         }
 
-        // ========== GÉNÉRATION SCRIPT BAT AVEC AUTO-ÉLÉVATION ==========
-        function generateDNSBatchScript(dnsConfig) {
-            const powershellCode = generatePowerShellCode(dnsConfig);
+        // ========== NAVIGATION TABS ==========
+        function showTab(tabName) {
+            // Masquer toutes les sections
+            document.getElementById('section-streaming').classList.add('hidden');
+            document.getElementById('section-download').classList.add('hidden');
+            document.getElementById('section-dns').classList.add('hidden');
             
-            // Script BAT avec auto-élévation UAC
-            return `@echo off
-REM Script de configuration DNS - ${dnsConfig.name}
-REM Généré par CinemaHub - ${new Date().toLocaleDateString('fr-FR')}
-
-REM ========== AUTO-ÉLÉVATION EN ADMINISTRATEUR ==========
-net session >nul 2>&1
-if %errorLevel% == 0 (
-    goto :run_script
-) else (
-    echo Demande d'elevation des privileges...
-    powershell -Command "Start-Process '%~f0' -Verb RunAs"
-    exit /b
-)
-
-:run_script
-REM ========== EXÉCUTION DU SCRIPT POWERSHELL ==========
-powershell -NoProfile -ExecutionPolicy Bypass -Command "${powershellCode.replace(/"/g, '""')}"
-
-pause
-exit`;
+            // Retirer la classe active de tous les boutons
+            document.getElementById('tab-streaming').classList.remove('active');
+            document.getElementById('tab-download').classList.remove('active');
+            document.getElementById('tab-dns').classList.remove('active');
+            
+            // Afficher la section sélectionnée
+            document.getElementById(`section-${tabName}`).classList.remove('hidden');
+            
+            // Activer le bouton sélectionné
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            
+            // Scroll en haut du contenu
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // ========== CODE POWERSHELL (INLINE) ==========
+        // ========== CODE POWERSHELL ==========
         function generatePowerShellCode(dnsConfig) {
             if (dnsConfig.primary === "auto") {
-                // Script pour restaurer DNS automatique
-                return `Write-Host '========================================' -ForegroundColor Cyan; Write-Host '   RESTAURATION DNS AUTOMATIQUE' -ForegroundColor Cyan; Write-Host '========================================' -ForegroundColor Cyan; Write-Host ''; Write-Host '[INFO] Recherche des interfaces réseau actives...' -ForegroundColor Yellow; $adapters = Get-NetAdapter | Where-Object { $_.Status -eq 'Up' }; if ($adapters.Count -eq 0) { Write-Host '[ERREUR] Aucune interface réseau active trouvée !' -ForegroundColor Red; exit 1 }; Write-Host '[OK] '$adapters.Count' interface(s) réseau active(s) détectée(s)' -ForegroundColor Green; Write-Host ''; foreach ($adapter in $adapters) { Write-Host 'Configuration de: '$adapter.Name -ForegroundColor Cyan; try { Set-DnsClientServerAddress -InterfaceIndex $adapter.InterfaceIndex -ResetServerAddresses; Write-Host '  [OK] DNS restaurés en automatique (DHCP)' -ForegroundColor Green } catch { Write-Host '  [ERREUR] Échec: '$_.Exception.Message -ForegroundColor Red }; Write-Host '' }; Write-Host '========================================' -ForegroundColor Cyan; Write-Host '   CONFIGURATION TERMINÉE' -ForegroundColor Cyan; Write-Host '========================================' -ForegroundColor Cyan; Write-Host ''; Write-Host 'Les DNS ont été restaurés en mode automatique !' -ForegroundColor Green; Write-Host ''`;
+                return `
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host "   RESTAURATION DNS AUTOMATIQUE" -ForegroundColor Cyan
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host ""
+
+Write-Host "[INFO] Recherche des interfaces réseau actives..." -ForegroundColor Yellow
+
+$adapters = Get-NetAdapter | Where-Object { $_.Status -eq "Up" }
+
+if ($adapters.Count -eq 0) {
+    Write-Host "[ERREUR] Aucune interface réseau active trouvée !" -ForegroundColor Red
+    Write-Host ""
+    Write-Host "Appuyez sur une touche pour quitter..."
+    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+    exit 1
+}
+
+Write-Host "[OK] $($adapters.Count) interface(s) réseau active(s) détectée(s)" -ForegroundColor Green
+Write-Host ""
+
+foreach ($adapter in $adapters) {
+    Write-Host "Configuration de: $($adapter.Name)" -ForegroundColor Cyan
+    
+    try {
+        Set-DnsClientServerAddress -InterfaceIndex $adapter.InterfaceIndex -ResetServerAddresses
+        Write-Host "  [OK] DNS restaurés en automatique (DHCP)" -ForegroundColor Green
+    } catch {
+        Write-Host "  [ERREUR] Échec: $($_.Exception.Message)" -ForegroundColor Red
+    }
+    
+    Write-Host ""
+}
+
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host "   CONFIGURATION TERMINÉE" -ForegroundColor Cyan
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "Les DNS ont été restaurés en mode automatique !" -ForegroundColor Green
+Write-Host ""
+Write-Host "Appuyez sur une touche pour quitter..."
+$null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+`;
             } else {
-                // Script pour configurer DNS personnalisé
-                return `Write-Host '========================================' -ForegroundColor Cyan; Write-Host '   CONFIGURATION DNS: ${dnsConfig.name}' -ForegroundColor Cyan; Write-Host '========================================' -ForegroundColor Cyan; Write-Host ''; $primaryDNS = '${dnsConfig.primary}'; $secondaryDNS = '${dnsConfig.secondary}'; Write-Host '[INFO] DNS Primaire   : '$primaryDNS -ForegroundColor Yellow; Write-Host '[INFO] DNS Secondaire : '$secondaryDNS -ForegroundColor Yellow; Write-Host ''; Write-Host '[INFO] Recherche des interfaces réseau actives...' -ForegroundColor Yellow; $adapters = Get-NetAdapter | Where-Object { $_.Status -eq 'Up' }; if ($adapters.Count -eq 0) { Write-Host '[ERREUR] Aucune interface réseau active trouvée !' -ForegroundColor Red; exit 1 }; Write-Host '[OK] '$adapters.Count' interface(s) réseau active(s) détectée(s)' -ForegroundColor Green; Write-Host ''; foreach ($adapter in $adapters) { Write-Host 'Configuration de: '$adapter.Name -ForegroundColor Cyan; try { Set-DnsClientServerAddress -InterfaceIndex $adapter.InterfaceIndex -ServerAddresses ($primaryDNS, $secondaryDNS); Write-Host '  [OK] DNS configurés avec succès' -ForegroundColor Green } catch { Write-Host '  [ERREUR] Échec: '$_.Exception.Message -ForegroundColor Red }; Write-Host '' }; Write-Host '[INFO] Vidage du cache DNS...' -ForegroundColor Yellow; try { Clear-DnsClientCache; Write-Host '[OK] Cache DNS vidé' -ForegroundColor Green } catch { Write-Host '[AVERTISSEMENT] Impossible de vider le cache DNS' -ForegroundColor Yellow }; Write-Host ''; Write-Host '========================================' -ForegroundColor Cyan; Write-Host '   CONFIGURATION TERMINÉE' -ForegroundColor Cyan; Write-Host '========================================' -ForegroundColor Cyan; Write-Host ''; Write-Host 'Les DNS ${dnsConfig.name} ont été appliqués à toutes les interfaces réseau actives !' -ForegroundColor Green; Write-Host ''`;
+                return `
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host "   CONFIGURATION DNS: ${dnsConfig.name}" -ForegroundColor Cyan
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host ""
+
+$primaryDNS = "${dnsConfig.primary}"
+$secondaryDNS = "${dnsConfig.secondary}"
+
+Write-Host "[INFO] DNS Primaire   : $primaryDNS" -ForegroundColor Yellow
+Write-Host "[INFO] DNS Secondaire : $secondaryDNS" -ForegroundColor Yellow
+Write-Host ""
+
+Write-Host "[INFO] Recherche des interfaces réseau actives..." -ForegroundColor Yellow
+
+$adapters = Get-NetAdapter | Where-Object { $_.Status -eq "Up" }
+
+if ($adapters.Count -eq 0) {
+    Write-Host "[ERREUR] Aucune interface réseau active trouvée !" -ForegroundColor Red
+    Write-Host ""
+    Write-Host "Appuyez sur une touche pour quitter..."
+    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+    exit 1
+}
+
+Write-Host "[OK] $($adapters.Count) interface(s) réseau active(s) détectée(s)" -ForegroundColor Green
+Write-Host ""
+
+foreach ($adapter in $adapters) {
+    Write-Host "Configuration de: $($adapter.Name)" -ForegroundColor Cyan
+    
+    try {
+        Set-DnsClientServerAddress -InterfaceIndex $adapter.InterfaceIndex -ServerAddresses ($primaryDNS, $secondaryDNS)
+        Write-Host "  [OK] DNS configurés avec succès" -ForegroundColor Green
+    } catch {
+        Write-Host "  [ERREUR] Échec: $($_.Exception.Message)" -ForegroundColor Red
+    }
+    
+    Write-Host ""
+}
+
+Write-Host "[INFO] Vidage du cache DNS..." -ForegroundColor Yellow
+try {
+    Clear-DnsClientCache
+    Write-Host "[OK] Cache DNS vidé" -ForegroundColor Green
+} catch {
+    Write-Host "[AVERTISSEMENT] Impossible de vider le cache DNS" -ForegroundColor Yellow
+}
+
+Write-Host ""
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host "   CONFIGURATION TERMINÉE" -ForegroundColor Cyan
+Write-Host "========================================" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "Les DNS ${dnsConfig.name} ont été appliqués à toutes les interfaces réseau actives !" -ForegroundColor Green
+Write-Host ""
+Write-Host "Appuyez sur une touche pour quitter..."
+$null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
+`;
             }
+        }
+
+        // ========== GÉNÉRATION SCRIPT VBS ==========
+        function generateVBScript(dnsConfig) {
+            const psCode = generatePowerShellCode(dnsConfig)
+                .replace(/\\/g, '\\\\')
+                .replace(/"/g, '""')
+                .replace(/\r?\n/g, ' ');
+            
+            return `' Script de configuration DNS - ${dnsConfig.name}
+' Généré par CinéHub - ${new Date().toLocaleDateString('fr-FR')}
+' Ce script s'auto-élève en administrateur avec UNE SEULE popup UAC
+
+Set objShell = CreateObject("Shell.Application")
+
+' Commande PowerShell à exécuter en admin
+strCommand = "powershell.exe -NoProfile -ExecutionPolicy Bypass -Command ""& {${psCode}}"""
+
+' Lancer PowerShell en tant qu'administrateur
+objShell.ShellExecute "powershell.exe", "-NoProfile -ExecutionPolicy Bypass -Command ""& {${psCode}}""", "", "runas", 1
+
+' Le script se termine immédiatement après avoir lancé PowerShell en admin
+`;
         }
 
         // ========== TÉLÉCHARGEMENT SCRIPT ==========
         function downloadDNSScript(dnsConfig) {
-            const scriptContent = generateDNSBatchScript(dnsConfig);
+            const scriptContent = generateVBScript(dnsConfig);
             const blob = new Blob([scriptContent], { type: 'text/plain;charset=utf-8' });
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = `DNS_${dnsConfig.name.replace(/\s+/g, '_')}.bat`;
+            link.download = `DNS_${dnsConfig.name.replace(/\s+/g, '_')}.vbs`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
@@ -406,9 +618,9 @@ exit`;
         async function loadSites() {
             const loadingEl = document.getElementById('loading');
             const errorEl = document.getElementById('error');
-            const streamingSection = document.getElementById('streaming-section');
-            const downloadSection = document.getElementById('download-section');
-            const dnsSection = document.getElementById('dns-section');
+            const streamingSection = document.getElementById('section-streaming');
+            const downloadSection = document.getElementById('section-download');
+            const dnsSection = document.getElementById('section-dns');
             const streamingGrid = document.getElementById('streaming-grid');
             const downloadGrid = document.getElementById('download-grid');
             const dnsGrid = document.getElementById('dns-grid');
@@ -427,40 +639,35 @@ exit`;
                 const streamingSites = data.sites.filter(site => site.type === 'streaming');
                 const downloadSites = data.sites.filter(site => site.type === 'download');
 
+                // Charger les sites de streaming
                 if (streamingSites.length > 0) {
-                    streamingSection.classList.remove('hidden');
                     streamingSites.forEach((site, index) => {
                         const card = createSiteCard(site, index);
                         streamingGrid.appendChild(card);
                     });
                 }
 
+                // Charger les sites de téléchargement
                 if (downloadSites.length > 0) {
-                    downloadSection.classList.remove('hidden');
                     downloadSites.forEach((site, index) => {
-                        const card = createSiteCard(site, index + streamingSites.length);
+                        const card = createSiteCard(site, index);
                         downloadGrid.appendChild(card);
                     });
                 }
 
-                // Afficher la section DNS
-                dnsSection.classList.remove('hidden');
+                // Charger les DNS
                 dnsConfigs.forEach((dns, index) => {
-                    const card = createDNSCard(dns, index + streamingSites.length + downloadSites.length);
+                    const card = createDNSCard(dns, index);
                     dnsGrid.appendChild(card);
                 });
+
+                // Afficher la première section (streaming)
+                showTab('streaming');
 
             } catch (error) {
                 console.error('Erreur:', error);
                 loadingEl.classList.add('hidden');
                 errorEl.classList.remove('hidden');
-                
-                // Afficher quand même la section DNS en cas d'erreur
-                dnsSection.classList.remove('hidden');
-                dnsConfigs.forEach((dns, index) => {
-                    const card = createDNSCard(dns, index);
-                    dnsGrid.appendChild(card);
-                });
             }
         }
 
