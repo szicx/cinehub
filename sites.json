@@ -41,6 +41,14 @@
       "favicon": "💥"
     },
     {
+      "name": "FrenchStream",
+      "url": "https://french-stream.one/",
+      "description": "-",
+      "type": "streaming",
+      "color": "#ff4757",
+      "favicon": "💥"
+    },
+    {
       "name": "DarkiWorld",
       "url": "https://darkiworld2026.com",
       "description": "-",
@@ -74,5 +82,6 @@
     }
   ]
 }
+
 
 
