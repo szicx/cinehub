@@ -37,8 +37,7 @@
         
         html, body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 25%, #16213e 50%, #1a1a2e 75%, #0a0a0f 100%);
-            background-attachment: fixed;
+            background: #0f1420;
             height: 100%;
             overflow: hidden;
         }
@@ -57,7 +56,7 @@
             right: 0;
             z-index: 1000;
             backdrop-filter: blur(20px);
-            background: rgba(10, 10, 15, 0.85);
+            background: rgba(10, 10, 15, 0.95);
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
         
@@ -70,7 +69,7 @@
             right: 0;
             z-index: 1000;
             backdrop-filter: blur(20px);
-            background: rgba(10, 10, 15, 0.85);
+            background: rgba(10, 10, 15, 0.95);
             border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
         
@@ -87,6 +86,7 @@
             display: flex;
             flex-direction: column;
             justify-content: center;
+            background: linear-gradient(135deg, #0a0a0f 0%, #16213e 50%, #0a0a0f 100%);
         }
         
         main .content-wrapper {
@@ -196,41 +196,35 @@
             animation: fadeIn 0.4s ease-out;
         }
         
-        /* ========== ANIMATION FLOTTANTE EMOJIS ========== */
+        /* ========== ANIMATION FLOTTANTE LÉGÈRE EMOJIS ========== */
         
         @keyframes float {
             0%, 100% {
                 transform: translateY(0px) rotate(0deg);
             }
-            25% {
-                transform: translateY(-8px) rotate(2deg);
-            }
             50% {
-                transform: translateY(-12px) rotate(-2deg);
-            }
-            75% {
-                transform: translateY(-8px) rotate(1deg);
+                transform: translateY(-5px) rotate(0.5deg);
             }
         }
         
         .floating-emoji {
-            animation: float 3s ease-in-out infinite;
+            animation: float 4s ease-in-out infinite;
         }
         
         .floating-emoji-delay-1 {
-            animation: float 3.5s ease-in-out infinite;
-            animation-delay: 0.2s;
+            animation: float 4.5s ease-in-out infinite;
+            animation-delay: 0.3s;
         }
         
         .floating-emoji-delay-2 {
-            animation: float 3.2s ease-in-out infinite;
-            animation-delay: 0.4s;
+            animation: float 4.2s ease-in-out infinite;
+            animation-delay: 0.6s;
         }
         
         /* ========== CARDS ========== */
         
         .cinema-card {
-            background: linear-gradient(145deg, rgba(26, 26, 36, 0.8) 0%, rgba(18, 18, 26, 0.6) 100%);
+            background: rgba(26, 26, 36, 0.6);
             border: 1px solid rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
@@ -238,25 +232,10 @@
             overflow: hidden;
         }
         
-        .cinema-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
-            transition: left 0.5s;
-            pointer-events: none;
-        }
-        
-        .cinema-card:hover::before {
-            left: 100%;
-        }
-        
         .cinema-card:hover {
             transform: translateY(-6px) scale(1.01);
             border-color: rgba(255, 255, 255, 0.15);
+            background: rgba(26, 26, 36, 0.8);
             box-shadow: 
                 0 20px 40px rgba(0, 0, 0, 0.6),
                 0 0 0 1px rgba(255, 255, 255, 0.1);
