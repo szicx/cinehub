@@ -3,7 +3,7 @@
     {
       "name": "Movix",
       "url": "https://movix.blog",
-      "description": "-",
+      "description": "",
       "type": "streaming",
       "color": "#e50914",
       "favicon": "🎬"
@@ -11,7 +11,7 @@
     {
       "name": "PurStream",
       "url": "https://purstream.me",
-      "description": "https://purstream.wiki/",
+      "description": "",
       "type": "streaming",
       "color": "#ffd700",
       "favicon": "🍿"
@@ -19,7 +19,7 @@
     {
       "name": "NoctaFlix",
       "url": "https://noctaflix.lol",
-      "description": "-",
+      "description": "",
       "type": "streaming",
       "color": "#ff6b9d",
       "favicon": "📺"
@@ -27,7 +27,7 @@
     {
       "name": "Coflix",
       "url": "https://coflix.observer/",
-      "description": "-",
+      "description": "",
       "type": "streaming",
       "color": "#00d9ff",
       "favicon": "⭐"
@@ -35,7 +35,7 @@
     {
       "name": "Sakmad",
       "url": "https://sakmad.com/",
-      "description": "-",
+      "description": "",
       "type": "streaming",
       "color": "#ff4757",
       "favicon": "💥"
@@ -43,7 +43,7 @@
     {
       "name": "FrenchStream",
       "url": "https://french-stream.one/",
-      "description": "-",
+      "description": "",
       "type": "streaming",
       "color": "#ff4757",
       "favicon": "💥"
@@ -51,7 +51,7 @@
     {
       "name": "MoiFlix",
       "url": "https://moiflix.org/",
-      "description": "-",
+      "description": "",
       "type": "streaming",
       "color": "#ff4757",
       "favicon": "💥"
@@ -59,7 +59,7 @@
     {
       "name": "DarkiWorld",
       "url": "https://darkiworld2026.com",
-      "description": "-",
+      "description": "",
       "type": "download",
       "color": "#a855f7",
       "favicon": "⚡"
@@ -67,7 +67,7 @@
     {
       "name": "Wawacity",
       "url": "https://www.wawacity.irish",
-      "description": "-",
+      "description": "",
       "type": "download",
       "color": "#06b6d4",
       "favicon": "📦"
@@ -75,13 +75,14 @@
     {
       "name": "ExtremeDownload",
       "url": "https://www.extreme-down.fit",
-      "description": "-",
+      "description": "",
       "type": "download",
       "color": "#f97316",
       "favicon": "💾"
     }
   ]
 }
+
 
 
 
