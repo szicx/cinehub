@@ -40,7 +40,7 @@
             background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 25%, #16213e 50%, #1a1a2e 75%, #0a0a0f 100%);
             background-attachment: fixed;
             height: 100%;
-            overflow-x: hidden;
+            overflow: hidden;
         }
         
         .font-cinema {
@@ -76,20 +76,16 @@
         
         main {
             position: fixed;
-            top: 0;
+            top: 140px;
             left: 0;
             right: 0;
-            bottom: 0;
-            padding-top: 150px;
-            padding-bottom: 60px;
+            bottom: 50px;
             overflow-y: auto;
             overflow-x: hidden;
-            display: flex;
-            align-items: center;
         }
         
         main .container {
-            width: 100%;
+            padding: 30px 1rem;
         }
         
         /* ========== TABS ========== */
@@ -286,7 +282,7 @@
         
         @media (max-width: 768px) {
             main {
-                padding-top: 170px;
+                top: 160px;
             }
             
             .tab-button {
@@ -333,7 +329,7 @@
         </div>
     </header>
 
-    <!-- Main Content (zone scrollable et centrée) -->
+    <!-- Main Content (zone scrollable) -->
     <main class="relative z-10">
         <div class="container mx-auto px-4">
             
