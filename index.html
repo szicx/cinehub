@@ -75,7 +75,7 @@
             border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
         
-        /* ========== MAIN CONTENT CENTRÉ (COMME AVANT) ========== */
+        /* ========== MAIN CONTENT (PAS DE CENTRAGE) ========== */
         
         main {
             position: fixed;
@@ -85,9 +85,6 @@
             bottom: 50px;
             overflow-y: auto;
             overflow-x: hidden;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
         }
         
         main .content-wrapper {
@@ -134,23 +131,6 @@
                 color: #ff0000;
                 text-shadow: 0 0 20px rgba(255, 0, 0, 0.8), 0 0 40px rgba(255, 0, 0, 0.4);
             }
-        }
-        
-        /* ========== ANIMATION FLOTTANTE POPCORN (PLUS DOUCE) ========== */
-        
-        @keyframes float-popcorn {
-            0%, 100% {
-                transform: translateY(0px) rotate(-2deg);
-            }
-            50% {
-                transform: translateY(-4px) rotate(2deg);
-            }
-        }
-        
-        .floating-popcorn {
-            animation: float-popcorn 4s ease-in-out infinite;
-            display: inline-block;
-            font-size: 2.75rem;
         }
         
         /* ========== TABS ========== */
@@ -370,10 +350,10 @@
             <!-- Logo avec Popcorn à droite -->
             <div class="flex items-center justify-between mb-4">
                 <div class="flex items-center gap-3">
-                    <h1 class="text-5xl font-cinema tracking-wider">
-                        <span class="rainbow-text">CINÉ</span><span class="text-white">HUB</span>
+                    <h1 class="text-5xl font-cinema tracking-wider flex items-center gap-3">
+                        <span><span class="rainbow-text">CINÉ</span><span class="text-white">HUB</span></span>
+                        <span class="text-3xl">🍿</span>
                     </h1>
-                    <span class="floating-popcorn">🍿</span>
                 </div>
                 <div class="hidden md:flex items-center gap-2">
                     <div class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
@@ -396,7 +376,7 @@
         </div>
     </header>
 
-    <!-- Main Content (zone scrollable et centrée) -->
+    <!-- Main Content (zone scrollable) -->
     <main class="relative z-10">
         <div class="content-wrapper">
             <div class="container mx-auto px-4">
