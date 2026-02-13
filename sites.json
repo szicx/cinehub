@@ -13,7 +13,7 @@
       "url": "https://purstream.me",
       "description": "",
       "type": "streaming",
-      "color": "#ffd700",
+      "color": "#00c90d",
       "rating": 4
     },
     {
@@ -21,8 +21,8 @@
       "url": "https://noctaflix.lol",
       "description": "",
       "type": "streaming",
-      "color": "#ff6b9d",
-      "rating": 1
+      "color": "#af00c9",
+      "rating": 3
     },
     {
       "name": "Coflix",
@@ -37,8 +37,8 @@
       "url": "https://sakmad.com/",
       "description": "",
       "type": "streaming",
-      "color": "#ff4757",
-      "favicon": "💥"
+      "color": "#c9b900",
+      "rating": 2
     },
     {
       "name": "FrenchStream",
@@ -46,15 +46,15 @@
       "description": "",
       "type": "streaming",
       "color": "#ff4757",
-      "rating": 5
+      "rating": 3
     },
     {
       "name": "MoiFlix",
       "url": "https://moiflix.org/",
       "description": "",
       "type": "streaming",
-      "color": "#ff4757",
-      "rating": 5
+      "color": "#00c986",
+      "rating": 3
     },
     {
       "name": "DarkiWorld",
@@ -70,7 +70,7 @@
       "description": "",
       "type": "download",
       "color": "#06b6d4",
-      "rating": 5
+      "rating": 4
     },
     {
       "name": "ExtremeDownload",
@@ -78,10 +78,11 @@
       "description": "",
       "type": "download",
       "color": "#f97316",
-      "rating": 5
+      "rating": 4
     }
   ]
 }
+
 
 
 
