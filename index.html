@@ -136,6 +136,22 @@
             }
         }
         
+        /* ========== ANIMATION FLOTTANTE POPCORN ========== */
+        
+        @keyframes float-popcorn {
+            0%, 100% {
+                transform: translateY(0px) rotate(-5deg);
+            }
+            50% {
+                transform: translateY(-8px) rotate(5deg);
+            }
+        }
+        
+        .floating-popcorn {
+            animation: float-popcorn 3s ease-in-out infinite;
+            display: inline-block;
+        }
+        
         /* ========== TABS ========== */
         
         .tab-button {
@@ -197,31 +213,6 @@
             animation: fadeIn 0.4s ease-out;
         }
         
-        /* ========== ANIMATION FLOTTANTE LÉGÈRE EMOJIS ========== */
-        
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0px) rotate(0deg);
-            }
-            50% {
-                transform: translateY(-5px) rotate(0.5deg);
-            }
-        }
-        
-        .floating-emoji {
-            animation: float 4s ease-in-out infinite;
-        }
-        
-        .floating-emoji-delay-1 {
-            animation: float 4.5s ease-in-out infinite;
-            animation-delay: 0.3s;
-        }
-        
-        .floating-emoji-delay-2 {
-            animation: float 4.2s ease-in-out infinite;
-            animation-delay: 0.6s;
-        }
-        
         /* ========== CARDS AVEC GRADIENT LÉGER ========== */
         
         .cinema-card {
@@ -241,12 +232,6 @@
                 0 0 0 1px rgba(255, 255, 255, 0.1);
         }
         
-        .cinema-card:hover .floating-emoji,
-        .cinema-card:hover .floating-emoji-delay-1,
-        .cinema-card:hover .floating-emoji-delay-2 {
-            animation-play-state: running;
-        }
-        
         /* ========== GLOW EFFECTS ========== */
         
         .site-title-glow {
@@ -261,21 +246,19 @@
             text-shadow: 0 0 20px rgba(229, 9, 20, 0.6);
         }
         
-        /* ========== BADGES ========== */
+        /* ========== BADGES REPOSITIONNÉS ========== */
         
-        .badge-streaming {
-            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
-            box-shadow: 0 0 15px rgba(220, 38, 38, 0.4);
+        .badge-site-name {
+            font-weight: 700;
+            font-size: 0.75rem;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
         }
         
-        .badge-download {
-            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
-            box-shadow: 0 0 15px rgba(37, 99, 235, 0.4);
-        }
-        
-        .badge-dns {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+        .badge-type {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.08) 100%);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         /* ========== BUTTON ========== */
@@ -365,9 +348,10 @@
     <!-- Header Fixe -->
     <header>
         <div class="container mx-auto px-4 py-6">
-            <!-- Logo -->
+            <!-- Logo avec Popcorn -->
             <div class="flex items-center justify-between mb-4">
-                <div>
+                <div class="flex items-center gap-3">
+                    <span class="floating-popcorn text-3xl">🍿</span>
                     <h1 class="text-5xl font-cinema tracking-wider">
                         <span class="rainbow-text">CINÉ</span><span class="text-white">HUB</span>
                     </h1>
@@ -454,42 +438,48 @@
                 description: "DNS rapide et fiable de Google",
                 primary: "8.8.8.8",
                 secondary: "8.8.4.4",
-                icon: "🌐"
+                icon: "🌐",
+                color: "#4285f4"
             },
             {
                 name: "Cloudflare DNS",
                 description: "DNS ultra-rapide axé sur la confidentialité",
                 primary: "1.1.1.1",
                 secondary: "1.0.0.1",
-                icon: "⚡"
+                icon: "⚡",
+                color: "#f38020"
             },
             {
                 name: "OpenDNS",
                 description: "Protection contre le phishing et les malwares",
                 primary: "208.67.222.222",
                 secondary: "208.67.220.220",
-                icon: "🛡️"
+                icon: "🛡️",
+                color: "#ff6633"
             },
             {
                 name: "Quad9",
                 description: "Bloque les domaines malveillants",
                 primary: "9.9.9.9",
                 secondary: "149.112.112.112",
-                icon: "🔒"
+                icon: "🔒",
+                color: "#00a0df"
             },
             {
                 name: "AdGuard DNS",
                 description: "Bloque les publicités et trackers",
                 primary: "94.140.14.14",
                 secondary: "94.140.15.15",
-                icon: "🚫"
+                icon: "🚫",
+                color: "#66b574"
             },
             {
                 name: "DNS Automatique",
                 description: "Restaurer les DNS par défaut (DHCP)",
                 primary: "auto",
                 secondary: "auto",
-                icon: "🔄"
+                icon: "🔄",
+                color: "#8b8b8b"
             }
         ];
 
@@ -681,35 +671,21 @@ exit`;
             card.className = 'cinema-card rounded-xl p-6 fade-in-up group cursor-pointer';
             card.style.animationDelay = `${index * 0.05}s`;
 
-            const badgeClass = site.type === 'streaming' ? 'badge-streaming' : 'badge-download';
-            const badgeIcon = site.type === 'streaming' ? '▶' : '↓';
-            const badgeText = site.type === 'streaming' ? 'STREAMING' : 'DOWNLOAD';
-
-            const favicon = site.favicon || (site.type === 'streaming' ? '🎬' : '📥');
-            
-            // Choisir une classe d'animation aléatoire
-            const floatClass = ['floating-emoji', 'floating-emoji-delay-1', 'floating-emoji-delay-2'][index % 3];
-            
-            const faviconHTML = site.favicon && site.favicon.startsWith('http') 
-                ? `<img src="${site.favicon}" alt="${site.name}" class="w-10 h-10 rounded object-cover ${floatClass}">`
-                : `<div class="text-4xl ${floatClass}">${favicon}</div>`;
-
+            const badgeTypeText = site.type === 'streaming' ? 'STREAMING' : 'DOWNLOAD';
+            const siteColor = site.color || '#888888';
             const titleColor = site.color || '#ffffff';
 
             card.innerHTML = `
                 <div class="flex flex-col h-full">
                     
-                    <!-- Badge -->
-                    <div class="mb-4">
-                        <span class="${badgeClass} text-white text-xs font-bold px-2.5 py-1 rounded-full inline-flex items-center gap-1">
-                            <span>${badgeIcon}</span>
-                            <span>${badgeText}</span>
+                    <!-- Badges (Nom du site à gauche, Type à droite) -->
+                    <div class="flex items-center justify-between mb-5">
+                        <span class="badge-site-name text-white px-3 py-1.5 rounded-lg" style="background: ${siteColor};">
+                            ${escapeHtml(site.name)}
                         </span>
-                    </div>
-                    
-                    <!-- Icon (sans hover scale) -->
-                    <div class="mb-4">
-                        ${faviconHTML}
+                        <span class="badge-type text-white text-xs font-semibold px-2.5 py-1 rounded-md uppercase tracking-wider">
+                            ${badgeTypeText}
+                        </span>
                     </div>
 
                     <!-- Title -->
@@ -744,23 +720,19 @@ exit`;
             card.className = 'cinema-card rounded-xl p-6 fade-in-up group cursor-pointer';
             card.style.animationDelay = `${index * 0.05}s`;
 
-            // Choisir une classe d'animation aléatoire
-            const floatClass = ['floating-emoji', 'floating-emoji-delay-1', 'floating-emoji-delay-2'][index % 3];
+            const siteColor = dns.color || '#888888';
 
             card.innerHTML = `
                 <div class="flex flex-col h-full">
                     
-                    <!-- Badge -->
-                    <div class="mb-4">
-                        <span class="badge-dns text-white text-xs font-bold px-2.5 py-1 rounded-full inline-flex items-center gap-1">
-                            <span>🔧</span>
-                            <span>DNS</span>
+                    <!-- Badges (Nom du DNS à gauche, Type à droite) -->
+                    <div class="flex items-center justify-between mb-5">
+                        <span class="badge-site-name text-white px-3 py-1.5 rounded-lg" style="background: ${siteColor};">
+                            ${escapeHtml(dns.name)}
                         </span>
-                    </div>
-                    
-                    <!-- Icon (sans hover scale) -->
-                    <div class="mb-4">
-                        <div class="text-4xl ${floatClass}">${dns.icon}</div>
+                        <span class="badge-type text-white text-xs font-semibold px-2.5 py-1 rounded-md uppercase tracking-wider">
+                            DNS
+                        </span>
                     </div>
 
                     <!-- Title -->
