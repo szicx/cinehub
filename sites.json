@@ -79,17 +79,10 @@
       "type": "download",
       "color": "#f97316",
       "favicon": "💾"
-    },
-    {
-      "name": "FastDL",
-      "url": "https://example-download4.com",
-      "description": "Vitesse maximale garantie jusqu'à 1Gb/s",
-      "type": "download",
-      "color": "#22c55e",
-      "favicon": "🚀"
     }
   ]
 }
+
 
 
 
