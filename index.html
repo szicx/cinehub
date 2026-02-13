@@ -74,6 +74,8 @@
             border-top: 1px solid rgba(255, 255, 255, 0.05);
         }
         
+        /* ========== MAIN CONTENT CENTRÉ ========== */
+        
         main {
             position: fixed;
             top: 140px;
@@ -82,10 +84,14 @@
             bottom: 50px;
             overflow-y: auto;
             overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
         
-        main .container {
-            padding: 30px 1rem;
+        main .content-wrapper {
+            width: 100%;
+            padding: 40px 1rem;
         }
         
         /* ========== TABS ========== */
@@ -329,43 +335,46 @@
         </div>
     </header>
 
-    <!-- Main Content (zone scrollable) -->
+    <!-- Main Content (zone scrollable et centrée) -->
     <main class="relative z-10">
-        <div class="container mx-auto px-4">
-            
-            <!-- Loading -->
-            <div id="loading" class="text-center py-20">
-                <div class="inline-block w-12 h-12 border-2 border-gray-700 border-t-white rounded-full animate-spin"></div>
-                <p class="mt-4 text-gray-500">Chargement...</p>
+        <div class="content-wrapper">
+            <div class="container mx-auto px-4">
+                
+                <!-- Loading -->
+                <div id="loading" class="text-center py-20">
+                    <div class="inline-block w-12 h-12 border-2 border-gray-700 border-t-white rounded-full animate-spin"></div>
+                    <p class="mt-4 text-gray-500">Chargement...</p>
+                </div>
+
+                <!-- Error -->
+                <div id="error" class="hidden text-center py-20">
+                    <div class="text-5xl mb-4">⚠️</div>
+                    <h2 class="text-red-500 text-xl font-bold mb-2">Erreur</h2>
+                    <p class="text-gray-500">Impossible de charger sites.json</p>
+                </div>
+
+                <!-- Section Streaming -->
+                <section id="section-streaming" class="hidden fade-in">
+                    <div id="streaming-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                        <!-- Cards streaming -->
+                    </div>
+                </section>
+
+                <!-- Section Download -->
+                <section id="section-download" class="hidden fade-in">
+                    <div id="download-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                        <!-- Cards download -->
+                    </div>
+                </section>
+
+                <!-- Section DNS -->
+                <section id="section-dns" class="hidden fade-in">
+                    <div id="dns-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                        <!-- Cards DNS -->
+                    </div>
+                </section>
+                
             </div>
-
-            <!-- Error -->
-            <div id="error" class="hidden text-center py-20">
-                <div class="text-5xl mb-4">⚠️</div>
-                <h2 class="text-red-500 text-xl font-bold mb-2">Erreur</h2>
-                <p class="text-gray-500">Impossible de charger sites.json</p>
-            </div>
-
-            <!-- Section Streaming -->
-            <section id="section-streaming" class="hidden fade-in">
-                <div id="streaming-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-                    <!-- Cards streaming -->
-                </div>
-            </section>
-
-            <!-- Section Download -->
-            <section id="section-download" class="hidden fade-in">
-                <div id="download-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-                    <!-- Cards download -->
-                </div>
-            </section>
-
-            <!-- Section DNS -->
-            <section id="section-dns" class="hidden fade-in">
-                <div id="dns-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-                    <!-- Cards DNS -->
-                </div>
-            </section>
         </div>
     </main>
 
