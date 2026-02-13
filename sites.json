@@ -1,0 +1,76 @@
+{
+  "sites": [
+    {
+      "name": "NetflixFR",
+      "url": "https://example-streaming1.com",
+      "description": "Films et séries en streaming HD, catalogue mis à jour quotidiennement",
+      "type": "streaming",
+      "color": "#e50914",
+      "favicon": "🎬"
+    },
+    {
+      "name": "CinéStream",
+      "url": "https://example-streaming2.com",
+      "description": "Plateforme premium avec films récents et classiques du cinéma",
+      "type": "streaming",
+      "color": "#ffd700",
+      "favicon": "🍿"
+    },
+    {
+      "name": "SeriesHub",
+      "url": "https://example-streaming3.com",
+      "description": "Séries TV, animes et documentaires en VOSTFR/VF",
+      "type": "streaming",
+      "color": "#ff6b9d",
+      "favicon": "📺"
+    },
+    {
+      "name": "VodPremium",
+      "url": "https://example-streaming4.com",
+      "description": "Streaming 4K Ultra HD avec son Dolby Atmos",
+      "type": "streaming",
+      "color": "#00d9ff",
+      "favicon": "⭐"
+    },
+    {
+      "name": "ActionFlix",
+      "url": "https://example-streaming5.com",
+      "description": "Films d'action, thriller et science-fiction",
+      "type": "streaming",
+      "color": "#ff4757",
+      "favicon": "💥"
+    },
+    {
+      "name": "TorrentFR",
+      "url": "https://example-download1.com",
+      "description": "Téléchargement direct haute vitesse sans limite",
+      "type": "download",
+      "color": "#a855f7",
+      "favicon": "⚡"
+    },
+    {
+      "name": "DDL Zone",
+      "url": "https://example-download2.com",
+      "description": "Multi-hébergeurs : MEGA, 1fichier, Uptobox",
+      "type": "download",
+      "color": "#06b6d4",
+      "favicon": "📦"
+    },
+    {
+      "name": "MegaHub",
+      "url": "https://example-download3.com",
+      "description": "Liens MEGA exclusifs, téléchargement rapide",
+      "type": "download",
+      "color": "#f97316",
+      "favicon": "💾"
+    },
+    {
+      "name": "FastDL",
+      "url": "https://example-download4.com",
+      "description": "Vitesse maximale garantie jusqu'à 1Gb/s",
+      "type": "download",
+      "color": "#22c55e",
+      "favicon": "🚀"
+    }
+  ]
+}
