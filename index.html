@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CinemaHub - Streaming & Download</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        dark: {
+                            bg: '#0a0a0f',
+                            surface: '#12121a',
+                            card: '#1a1a24',
+                            hover: '#22222e',
+                            border: '#2a2a38',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Import Google Fonts */
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap');
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 25%, #16213e 50%, #1a1a2e 75%, #0a0a0f 100%);
+            background-attachment: fixed;
+        }
+        
+        .font-cinema {
+            font-family: 'Bebas Neue', sans-serif;
+            letter-spacing: 3px;
+        }
+        
+        /* ========== ANIMATIONS ========== */
+        
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0);
+            }
+        }
+        
+        .fade-in-up {
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+        
+        /* ========== CARDS ========== */
+        
+        .cinema-card {
+            background: linear-gradient(145deg, rgba(26, 26, 36, 0.8) 0%, rgba(18, 18, 26, 0.6) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .cinema-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            transition: left 0.5s;
+        }
+        
+        .cinema-card:hover::before {
+            left: 100%;
+        }
+        
+        .cinema-card:hover {
+            transform: translateY(-6px) scale(1.01);
+            border-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.6),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+        }
+        
+        /* ========== GLOW EFFECTS ========== */
+        
+        .site-title-glow {
+            transition: all 0.3s ease;
+        }
+        
+        .cinema-card:hover .site-title-glow {
+            filter: brightness(1.3) drop-shadow(0 0 10px currentColor);
+        }
+        
+        /* ========== BADGES ========== */
+        
+        .badge-streaming {
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+            box-shadow: 0 0 15px rgba(220, 38, 38, 0.4);
+        }
+        
+        .badge-download {
+            background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+            box-shadow: 0 0 15px rgba(37, 99, 235, 0.4);
+        }
+        
+        .badge-dns {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+        }
+        
+        /* ========== BUTTON ========== */
+        
+        .btn-access {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-access:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.25);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.15);
+            transform: translateY(-2px);
+        }
+        
+        .btn-download {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .btn-download:hover {
+            background: linear-gradient(135deg, #059669 0%, #047857 100%);
+            box-shadow: 0 0 25px rgba(16, 185, 129, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        /* ========== PARTICLES ========== */
+        
+        #particles {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 50%;
+            animation: particleFloat linear infinite;
+            box-shadow: 0 0 4px rgba(255, 255, 255, 0.6);
+        }
+        
+        @keyframes particleFloat {
+            0% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-10vh) translateX(var(--drift)) scale(1);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+
+<body class="min-h-screen text-white relative">
+    
+    <!-- Particles -->
+    <div id="particles"></div>
+    
+    <!-- Main Content -->
+    <div class="relative z-10">
+        
+        <!-- Header -->
+        <header class="border-b border-white/5 py-8 mb-12 sticky top-0 z-50 backdrop-blur-xl bg-dark-bg/60">
+            <div class="container mx-auto px-4">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-5xl font-cinema text-white tracking-wider">
+                            CINEMAHUB
+                        </h1>
+                        <p class="text-gray-500 text-sm mt-1">Streaming & Download Center</p>
+                    </div>
+                    <div class="hidden md:flex items-center gap-2">
+                        <div class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+                        <span class="text-gray-500 text-xs uppercase tracking-wider">Live</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main -->
+        <main class="container mx-auto px-4 pb-16">
+            
+            <!-- Loading -->
+            <div id="loading" class="text-center py-20">
+                <div class="inline-block w-12 h-12 border-2 border-gray-700 border-t-white rounded-full animate-spin"></div>
+                <p class="mt-4 text-gray-500">Chargement...</p>
+            </div>
+
+            <!-- Error -->
+            <div id="error" class="hidden text-center py-20">
+                <div class="text-5xl mb-4">⚠️</div>
+                <h2 class="text-red-500 text-xl font-bold mb-2">Erreur</h2>
+                <p class="text-gray-500">Impossible de charger sites.json</p>
+            </div>
+
+            <!-- Section Streaming -->
+            <section id="streaming-section" class="hidden mb-16">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-cinema text-white tracking-wider">
+                        STREAMING
+                    </h2>
+                </div>
+                <div id="streaming-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                    <!-- Cards streaming -->
+                </div>
+            </section>
+
+            <!-- Section Download -->
+            <section id="download-section" class="hidden mb-16">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-cinema text-white tracking-wider">
+                        TÉLÉCHARGEMENT
+                    </h2>
+                </div>
+                <div id="download-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                    <!-- Cards download -->
+                </div>
+            </section>
+
+            <!-- Section DNS -->
+            <section id="dns-section" class="hidden">
+                <div class="mb-8">
+                    <h2 class="text-3xl font-cinema text-white tracking-wider">
+                        DNS
+                    </h2>
+                </div>
+                <div id="dns-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+                    <!-- Cards DNS -->
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="border-t border-white/5 py-6 mt-20">
+            <div class="container mx-auto px-4 text-center">
+                <p class="text-gray-600 text-xs">
+                    CinemaHub © 2026
+                </p>
+            </div>
+        </footer>
+        
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // ========== DNS CONFIGURATIONS ==========
+        const dnsConfigs = [
+            {
+                name: "Google DNS",
+                description: "DNS rapide et fiable de Google",
+                primary: "8.8.8.8",
+                secondary: "8.8.4.4",
+                icon: "🌐"
+            },
+            {
+                name: "Cloudflare DNS",
+                description: "DNS ultra-rapide axé sur la confidentialité",
+                primary: "1.1.1.1",
+                secondary: "1.0.0.1",
+                icon: "⚡"
+            },
+            {
+                name: "OpenDNS",
+                description: "Protection contre le phishing et les malwares",
+                primary: "208.67.222.222",
+                secondary: "208.67.220.220",
+                icon: "🛡️"
+            },
+            {
+                name: "Quad9",
+                description: "Bloque les domaines malveillants",
+                primary: "9.9.9.9",
+                secondary: "149.112.112.112",
+                icon: "🔒"
+            },
+            {
+                name: "AdGuard DNS",
+                description: "Bloque les publicités et trackers",
+                primary: "94.140.14.14",
+                secondary: "94.140.15.15",
+                icon: "🚫"
+            },
+            {
+                name: "DNS Automatique",
+                description: "Restaurer les DNS par défaut (DHCP)",
+                primary: "auto",
+                secondary: "auto",
+                icon: "🔄"
+            }
+        ];
+
+        // ========== PARTICULES ==========
+        function createParticles() {
+            const container = document.getElementById('particles');
+            const particleCount = 35;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                
+                const startX = Math.random() * 100;
+                const drift = (Math.random() - 0.5) * 200;
+                const duration = 12 + Math.random() * 15;
+                const delay = Math.random() * 5;
+                const size = 1 + Math.random() * 2;
+                
+                particle.style.left = `${startX}%`;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.animationDuration = `${duration}s`;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.setProperty('--drift', `${drift}px`);
+                
+                container.appendChild(particle);
+            }
+        }
+
+        // ========== GÉNÉRATION SCRIPT BAT AVEC AUTO-ÉLÉVATION ==========
+        function generateDNSBatchScript(dnsConfig) {
+            const powershellCode = generatePowerShellCode(dnsConfig);
+            
+            // Script BAT avec auto-élévation UAC
+            return `@echo off
+REM Script de configuration DNS - ${dnsConfig.name}
+REM Généré par CinemaHub - ${new Date().toLocaleDateString('fr-FR')}
+
+REM ========== AUTO-ÉLÉVATION EN ADMINISTRATEUR ==========
+net session >nul 2>&1
+if %errorLevel% == 0 (
+    goto :run_script
+) else (
+    echo Demande d'elevation des privileges...
+    powershell -Command "Start-Process '%~f0' -Verb RunAs"
+    exit /b
+)
+
+:run_script
+REM ========== EXÉCUTION DU SCRIPT POWERSHELL ==========
+powershell -NoProfile -ExecutionPolicy Bypass -Command "${powershellCode.replace(/"/g, '""')}"
+
+pause
+exit`;
+        }
+
+        // ========== CODE POWERSHELL (INLINE) ==========
+        function generatePowerShellCode(dnsConfig) {
+            if (dnsConfig.primary === "auto") {
+                // Script pour restaurer DNS automatique
+                return `Write-Host '========================================' -ForegroundColor Cyan; Write-Host '   RESTAURATION DNS AUTOMATIQUE' -ForegroundColor Cyan; Write-Host '========================================' -ForegroundColor Cyan; Write-Host ''; Write-Host '[INFO] Recherche des interfaces réseau actives...' -ForegroundColor Yellow; $adapters = Get-NetAdapter | Where-Object { $_.Status -eq 'Up' }; if ($adapters.Count -eq 0) { Write-Host '[ERREUR] Aucune interface réseau active trouvée !' -ForegroundColor Red; exit 1 }; Write-Host '[OK] '$adapters.Count' interface(s) réseau active(s) détectée(s)' -ForegroundColor Green; Write-Host ''; foreach ($adapter in $adapters) { Write-Host 'Configuration de: '$adapter.Name -ForegroundColor Cyan; try { Set-DnsClientServerAddress -InterfaceIndex $adapter.InterfaceIndex -ResetServerAddresses; Write-Host '  [OK] DNS restaurés en automatique (DHCP)' -ForegroundColor Green } catch { Write-Host '  [ERREUR] Échec: '$_.Exception.Message -ForegroundColor Red }; Write-Host '' }; Write-Host '========================================' -ForegroundColor Cyan; Write-Host '   CONFIGURATION TERMINÉE' -ForegroundColor Cyan; Write-Host '========================================' -ForegroundColor Cyan; Write-Host ''; Write-Host 'Les DNS ont été restaurés en mode automatique !' -ForegroundColor Green; Write-Host ''`;
+            } else {
+                // Script pour configurer DNS personnalisé
+                return `Write-Host '========================================' -ForegroundColor Cyan; Write-Host '   CONFIGURATION DNS: ${dnsConfig.name}' -ForegroundColor Cyan; Write-Host '========================================' -ForegroundColor Cyan; Write-Host ''; $primaryDNS = '${dnsConfig.primary}'; $secondaryDNS = '${dnsConfig.secondary}'; Write-Host '[INFO] DNS Primaire   : '$primaryDNS -ForegroundColor Yellow; Write-Host '[INFO] DNS Secondaire : '$secondaryDNS -ForegroundColor Yellow; Write-Host ''; Write-Host '[INFO] Recherche des interfaces réseau actives...' -ForegroundColor Yellow; $adapters = Get-NetAdapter | Where-Object { $_.Status -eq 'Up' }; if ($adapters.Count -eq 0) { Write-Host '[ERREUR] Aucune interface réseau active trouvée !' -ForegroundColor Red; exit 1 }; Write-Host '[OK] '$adapters.Count' interface(s) réseau active(s) détectée(s)' -ForegroundColor Green; Write-Host ''; foreach ($adapter in $adapters) { Write-Host 'Configuration de: '$adapter.Name -ForegroundColor Cyan; try { Set-DnsClientServerAddress -InterfaceIndex $adapter.InterfaceIndex -ServerAddresses ($primaryDNS, $secondaryDNS); Write-Host '  [OK] DNS configurés avec succès' -ForegroundColor Green } catch { Write-Host '  [ERREUR] Échec: '$_.Exception.Message -ForegroundColor Red }; Write-Host '' }; Write-Host '[INFO] Vidage du cache DNS...' -ForegroundColor Yellow; try { Clear-DnsClientCache; Write-Host '[OK] Cache DNS vidé' -ForegroundColor Green } catch { Write-Host '[AVERTISSEMENT] Impossible de vider le cache DNS' -ForegroundColor Yellow }; Write-Host ''; Write-Host '========================================' -ForegroundColor Cyan; Write-Host '   CONFIGURATION TERMINÉE' -ForegroundColor Cyan; Write-Host '========================================' -ForegroundColor Cyan; Write-Host ''; Write-Host 'Les DNS ${dnsConfig.name} ont été appliqués à toutes les interfaces réseau actives !' -ForegroundColor Green; Write-Host ''`;
+            }
+        }
+
+        // ========== TÉLÉCHARGEMENT SCRIPT ==========
+        function downloadDNSScript(dnsConfig) {
+            const scriptContent = generateDNSBatchScript(dnsConfig);
+            const blob = new Blob([scriptContent], { type: 'text/plain;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `DNS_${dnsConfig.name.replace(/\s+/g, '_')}.bat`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+        }
+
+        // ========== CHARGEMENT DES SITES ==========
+        async function loadSites() {
+            const loadingEl = document.getElementById('loading');
+            const errorEl = document.getElementById('error');
+            const streamingSection = document.getElementById('streaming-section');
+            const downloadSection = document.getElementById('download-section');
+            const dnsSection = document.getElementById('dns-section');
+            const streamingGrid = document.getElementById('streaming-grid');
+            const downloadGrid = document.getElementById('download-grid');
+            const dnsGrid = document.getElementById('dns-grid');
+
+            try {
+                const response = await fetch('sites.json');
+                
+                if (!response.ok) {
+                    throw new Error('sites.json introuvable');
+                }
+                
+                const data = await response.json();
+                
+                loadingEl.classList.add('hidden');
+
+                const streamingSites = data.sites.filter(site => site.type === 'streaming');
+                const downloadSites = data.sites.filter(site => site.type === 'download');
+
+                if (streamingSites.length > 0) {
+                    streamingSection.classList.remove('hidden');
+                    streamingSites.forEach((site, index) => {
+                        const card = createSiteCard(site, index);
+                        streamingGrid.appendChild(card);
+                    });
+                }
+
+                if (downloadSites.length > 0) {
+                    downloadSection.classList.remove('hidden');
+                    downloadSites.forEach((site, index) => {
+                        const card = createSiteCard(site, index + streamingSites.length);
+                        downloadGrid.appendChild(card);
+                    });
+                }
+
+                // Afficher la section DNS
+                dnsSection.classList.remove('hidden');
+                dnsConfigs.forEach((dns, index) => {
+                    const card = createDNSCard(dns, index + streamingSites.length + downloadSites.length);
+                    dnsGrid.appendChild(card);
+                });
+
+            } catch (error) {
+                console.error('Erreur:', error);
+                loadingEl.classList.add('hidden');
+                errorEl.classList.remove('hidden');
+                
+                // Afficher quand même la section DNS en cas d'erreur
+                dnsSection.classList.remove('hidden');
+                dnsConfigs.forEach((dns, index) => {
+                    const card = createDNSCard(dns, index);
+                    dnsGrid.appendChild(card);
+                });
+            }
+        }
+
+        // ========== CRÉATION CARD SITE ==========
+        function createSiteCard(site, index) {
+            const card = document.createElement('div');
+            card.className = 'cinema-card rounded-xl p-6 fade-in-up group cursor-pointer';
+            card.style.animationDelay = `${index * 0.05}s`;
+
+            const badgeClass = site.type === 'streaming' ? 'badge-streaming' : 'badge-download';
+            const badgeIcon = site.type === 'streaming' ? '▶' : '↓';
+            const badgeText = site.type === 'streaming' ? 'STREAMING' : 'DOWNLOAD';
+
+            const favicon = site.favicon || (site.type === 'streaming' ? '🎬' : '📥');
+            const faviconHTML = site.favicon && site.favicon.startsWith('http') 
+                ? `<img src="${site.favicon}" alt="${site.name}" class="w-10 h-10 rounded object-cover">`
+                : `<div class="text-4xl">${favicon}</div>`;
+
+            const titleColor = site.color || '#ffffff';
+
+            card.innerHTML = `
+                <div class="flex flex-col h-full">
+                    
+                    <!-- Badge -->
+                    <div class="mb-4">
+                        <span class="${badgeClass} text-white text-xs font-bold px-2.5 py-1 rounded-full inline-flex items-center gap-1">
+                            <span>${badgeIcon}</span>
+                            <span>${badgeText}</span>
+                        </span>
+                    </div>
+                    
+                    <!-- Icon -->
+                    <div class="mb-4 transform group-hover:scale-110 transition-transform duration-300">
+                        ${faviconHTML}
+                    </div>
+
+                    <!-- Title -->
+                    <h3 class="text-xl font-bold mb-2 site-title-glow" style="color: ${titleColor};">
+                        ${escapeHtml(site.name)}
+                    </h3>
+
+                    <!-- Description -->
+                    <p class="text-gray-400 text-sm mb-5 flex-grow leading-relaxed">
+                        ${escapeHtml(site.description)}
+                    </p>
+
+                    <!-- Button -->
+                    <a href="${escapeHtml(site.url)}" 
+                       target="_blank" 
+                       rel="noopener noreferrer"
+                       class="btn-access inline-flex items-center justify-center px-5 py-2.5 rounded-lg font-semibold text-white text-sm">
+                        <span>Accéder</span>
+                        <svg class="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                        </svg>
+                    </a>
+                </div>
+            `;
+
+            return card;
+        }
+
+        // ========== CRÉATION CARD DNS ==========
+        function createDNSCard(dns, index) {
+            const card = document.createElement('div');
+            card.className = 'cinema-card rounded-xl p-6 fade-in-up group cursor-pointer';
+            card.style.animationDelay = `${index * 0.05}s`;
+
+            card.innerHTML = `
+                <div class="flex flex-col h-full">
+                    
+                    <!-- Badge -->
+                    <div class="mb-4">
+                        <span class="badge-dns text-white text-xs font-bold px-2.5 py-1 rounded-full inline-flex items-center gap-1">
+                            <span>🔧</span>
+                            <span>DNS</span>
+                        </span>
+                    </div>
+                    
+                    <!-- Icon -->
+                    <div class="mb-4 transform group-hover:scale-110 transition-transform duration-300">
+                        <div class="text-4xl">${dns.icon}</div>
+                    </div>
+
+                    <!-- Title -->
+                    <h3 class="text-xl font-bold mb-2 text-white">
+                        ${escapeHtml(dns.name)}
+                    </h3>
+
+                    <!-- Description -->
+                    <p class="text-gray-400 text-sm mb-3 flex-grow leading-relaxed">
+                        ${escapeHtml(dns.description)}
+                    </p>
+
+                    <!-- DNS Info -->
+                    <div class="mb-5 text-xs text-gray-500 space-y-1">
+                        ${dns.primary !== 'auto' ? `
+                        <div>Primaire: <span class="text-gray-400 font-mono">${dns.primary}</span></div>
+                        <div>Secondaire: <span class="text-gray-400 font-mono">${dns.secondary}</span></div>
+                        ` : '<div class="text-gray-400">Restaure les paramètres par défaut</div>'}
+                    </div>
+
+                    <!-- Button -->
+                    <button 
+                        onclick='downloadDNSScript(${JSON.stringify(dns)})'
+                        class="btn-download inline-flex items-center justify-center px-5 py-2.5 rounded-lg font-semibold text-white text-sm">
+                        <span>Télécharger Script</span>
+                        <svg class="w-4 h-4 ml-2 group-hover:translate-y-0.5 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                        </svg>
+                    </button>
+                </div>
+            `;
+
+            return card;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // ========== INIT ==========
+        document.addEventListener('DOMContentLoaded', () => {
+            createParticles();
+            loadSites();
+        });
+    </script>
+
+</body>
+</html>
