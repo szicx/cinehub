@@ -49,6 +49,14 @@
       "favicon": "💥"
     },
     {
+      "name": "MoiFlix",
+      "url": "https://moiflix.org/",
+      "description": "-",
+      "type": "streaming",
+      "color": "#ff4757",
+      "favicon": "💥"
+    },
+    {
       "name": "DarkiWorld",
       "url": "https://darkiworld2026.com",
       "description": "-",
@@ -82,6 +90,7 @@
     }
   ]
 }
+
 
 
 
