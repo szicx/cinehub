@@ -25,17 +25,17 @@
       "favicon": "📺"
     },
     {
-      "name": "VodPremium",
-      "url": "https://example-streaming4.com",
-      "description": "Streaming 4K Ultra HD avec son Dolby Atmos",
+      "name": "Coflix",
+      "url": "https://coflix.observer/",
+      "description": "-",
       "type": "streaming",
       "color": "#00d9ff",
       "favicon": "⭐"
     },
     {
-      "name": "ActionFlix",
-      "url": "https://example-streaming5.com",
-      "description": "Films d'action, thriller et science-fiction",
+      "name": "Sakmad",
+      "url": "https://sakmad.com/",
+      "description": "-",
       "type": "streaming",
       "color": "#ff4757",
       "favicon": "💥"
@@ -74,4 +74,5 @@
     }
   ]
 }
+
 
