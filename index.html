@@ -136,20 +136,21 @@
             }
         }
         
-        /* ========== ANIMATION FLOTTANTE POPCORN ========== */
+        /* ========== ANIMATION FLOTTANTE POPCORN (PLUS DOUCE) ========== */
         
         @keyframes float-popcorn {
             0%, 100% {
-                transform: translateY(0px) rotate(-5deg);
+                transform: translateY(0px) rotate(-2deg);
             }
             50% {
-                transform: translateY(-8px) rotate(5deg);
+                transform: translateY(-4px) rotate(2deg);
             }
         }
         
         .floating-popcorn {
-            animation: float-popcorn 3s ease-in-out infinite;
+            animation: float-popcorn 4s ease-in-out infinite;
             display: inline-block;
+            font-size: 3.5rem;
         }
         
         /* ========== TABS ========== */
@@ -244,7 +245,7 @@
             transition: all 0.3s ease;
         }
         
-        /* Effet glow text-shadow au hover */
+        /* Effet glow box-shadow + text-shadow au hover avec la couleur du badge */
         .cinema-card:hover .badge-site-name {
             filter: brightness(1.1);
         }
@@ -372,7 +373,7 @@
                     <h1 class="text-5xl font-cinema tracking-wider">
                         <span class="rainbow-text">CINÉ</span><span class="text-white">HUB</span>
                     </h1>
-                    <span class="floating-popcorn text-3xl">🍿</span>
+                    <span class="floating-popcorn">🍿</span>
                 </div>
                 <div class="hidden md:flex items-center gap-2">
                     <div class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
@@ -457,8 +458,7 @@
                 primary: "8.8.8.8",
                 secondary: "8.8.4.4",
                 icon: "🌐",
-                color: "#4285f4",
-                rating: 5
+                color: "#4285f4"
             },
             {
                 name: "Cloudflare DNS",
@@ -466,8 +466,7 @@
                 primary: "1.1.1.1",
                 secondary: "1.0.0.1",
                 icon: "⚡",
-                color: "#f38020",
-                rating: 5
+                color: "#f38020"
             },
             {
                 name: "OpenDNS",
@@ -475,8 +474,7 @@
                 primary: "208.67.222.222",
                 secondary: "208.67.220.220",
                 icon: "🛡️",
-                color: "#ff6633",
-                rating: 4
+                color: "#ff6633"
             },
             {
                 name: "Quad9",
@@ -484,8 +482,7 @@
                 primary: "9.9.9.9",
                 secondary: "149.112.112.112",
                 icon: "🔒",
-                color: "#00a0df",
-                rating: 4
+                color: "#00a0df"
             },
             {
                 name: "AdGuard DNS",
@@ -493,8 +490,7 @@
                 primary: "94.140.14.14",
                 secondary: "94.140.15.15",
                 icon: "🚫",
-                color: "#66b574",
-                rating: 4
+                color: "#66b574"
             },
             {
                 name: "DNS Automatique",
@@ -502,8 +498,7 @@
                 primary: "auto",
                 secondary: "auto",
                 icon: "🔄",
-                color: "#8b8b8b",
-                rating: 3
+                color: "#8b8b8b"
             }
         ];
 
@@ -557,7 +552,7 @@
         }
 
         // ========== GÉNÉRATION ÉTOILES ÉMOJIS ==========
-        function generateStars(rating, color) {
+        function generateStars(rating) {
             let starsHtml = '<div class="star-rating">';
             for (let i = 1; i <= 5; i++) {
                 if (i <= rating) {
@@ -721,16 +716,20 @@ exit`;
             const siteColor = site.color || '#888888';
             const rating = site.rating || 3;
             
-            // Créer le text-shadow avec la couleur du site
-            const rgba = hexToRgba(siteColor, 0.6);
-            const textShadow = `0 0 20px ${rgba}, 0 0 40px ${rgba}`;
+            // Créer le text-shadow et box-shadow avec la couleur du site
+            const rgbaText = hexToRgba(siteColor, 0.6);
+            const rgbaBox = hexToRgba(siteColor, 0.4);
+            const textShadow = `0 0 20px ${rgbaText}, 0 0 40px ${rgbaText}`;
+            const boxShadow = `0 0 30px ${rgbaBox}, 0 0 60px ${rgbaBox}`;
 
             card.innerHTML = `
                 <div class="flex flex-col h-full">
                     
                     <!-- Badges (Nom du site à gauche, Type à droite) -->
                     <div class="flex items-center justify-between mb-5">
-                        <span class="badge-site-name text-white" style="background: ${siteColor}; text-shadow: ${textShadow};">
+                        <span class="badge-site-name text-white" 
+                              style="background: ${siteColor}; text-shadow: ${textShadow};"
+                              data-glow="${boxShadow}">
                             ${escapeHtml(site.name)}
                         </span>
                         <span class="badge-type text-white">
@@ -739,8 +738,8 @@ exit`;
                     </div>
 
                     <!-- Étoiles de popularité -->
-                    <div class="mb-4">
-                        ${generateStars(rating, siteColor)}
+                    <div class="mb-3">
+                        ${generateStars(rating)}
                     </div>
 
                     <!-- Description -->
@@ -761,38 +760,45 @@ exit`;
                 </div>
             `;
 
+            // Ajouter l'effet glow au hover
+            const badgeName = card.querySelector('.badge-site-name');
+            card.addEventListener('mouseenter', () => {
+                badgeName.style.boxShadow = boxShadow;
+            });
+            card.addEventListener('mouseleave', () => {
+                badgeName.style.boxShadow = 'none';
+            });
+
             return card;
         }
 
-        // ========== CRÉATION CARD DNS ==========
+        // ========== CRÉATION CARD DNS (SANS ÉTOILES) ==========
         function createDNSCard(dns, index) {
             const card = document.createElement('div');
             card.className = 'cinema-card rounded-xl p-6 fade-in-up group cursor-pointer';
             card.style.animationDelay = `${index * 0.05}s`;
 
             const siteColor = dns.color || '#888888';
-            const rating = dns.rating || 3;
             
-            // Créer le text-shadow avec la couleur du DNS
-            const rgba = hexToRgba(siteColor, 0.6);
-            const textShadow = `0 0 20px ${rgba}, 0 0 40px ${rgba}`;
+            // Créer le text-shadow et box-shadow avec la couleur du DNS
+            const rgbaText = hexToRgba(siteColor, 0.6);
+            const rgbaBox = hexToRgba(siteColor, 0.4);
+            const textShadow = `0 0 20px ${rgbaText}, 0 0 40px ${rgbaText}`;
+            const boxShadow = `0 0 30px ${rgbaBox}, 0 0 60px ${rgbaBox}`;
 
             card.innerHTML = `
                 <div class="flex flex-col h-full">
                     
                     <!-- Badges (Nom du DNS à gauche, Type à droite) -->
                     <div class="flex items-center justify-between mb-5">
-                        <span class="badge-site-name text-white" style="background: ${siteColor}; text-shadow: ${textShadow};">
+                        <span class="badge-site-name text-white" 
+                              style="background: ${siteColor}; text-shadow: ${textShadow};"
+                              data-glow="${boxShadow}">
                             ${escapeHtml(dns.name)}
                         </span>
                         <span class="badge-type text-white">
                             DNS
                         </span>
-                    </div>
-
-                    <!-- Étoiles de popularité -->
-                    <div class="mb-4">
-                        ${generateStars(rating, siteColor)}
                     </div>
 
                     <!-- Description -->
@@ -819,6 +825,15 @@ exit`;
                     </button>
                 </div>
             `;
+
+            // Ajouter l'effet glow au hover
+            const badgeName = card.querySelector('.badge-site-name');
+            card.addEventListener('mouseenter', () => {
+                badgeName.style.boxShadow = boxShadow;
+            });
+            card.addEventListener('mouseleave', () => {
+                badgeName.style.boxShadow = 'none';
+            });
 
             return card;
         }
