@@ -35,10 +35,12 @@
         /* Import Google Fonts */
         @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;600;700&display=swap');
         
-        body {
+        html, body {
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #0a0a0f 0%, #1a1a2e 25%, #16213e 50%, #1a1a2e 75%, #0a0a0f 100%);
             background-attachment: fixed;
+            height: 100%;
+            overflow-x: hidden;
         }
         
         .font-cinema {
@@ -73,8 +75,9 @@
         }
         
         main {
-            margin-top: 200px; /* Espace pour le header */
-            margin-bottom: 60px; /* Espace pour le footer */
+            padding-top: 180px;
+            padding-bottom: 80px;
+            min-height: 100vh;
         }
         
         /* ========== TABS ========== */
@@ -271,8 +274,7 @@
         
         @media (max-width: 768px) {
             main {
-                margin-top: 220px;
-                margin-bottom: 60px;
+                padding-top: 200px;
             }
             
             .tab-button {
@@ -283,7 +285,7 @@
     </style>
 </head>
 
-<body class="min-h-screen text-white relative">
+<body class="text-white relative">
     
     <!-- Particles -->
     <div id="particles"></div>
@@ -322,7 +324,7 @@
 
     <!-- Main Content (zone scrollable) -->
     <main class="relative z-10">
-        <div class="container mx-auto px-4 pb-16">
+        <div class="container mx-auto px-4">
             
             <!-- Loading -->
             <div id="loading" class="text-center py-20">
@@ -339,11 +341,6 @@
 
             <!-- Section Streaming -->
             <section id="section-streaming" class="hidden fade-in">
-                <div class="mb-8">
-                    <h2 class="text-3xl font-cinema text-white tracking-wider">
-                        STREAMING
-                    </h2>
-                </div>
                 <div id="streaming-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                     <!-- Cards streaming -->
                 </div>
@@ -351,11 +348,6 @@
 
             <!-- Section Download -->
             <section id="section-download" class="hidden fade-in">
-                <div class="mb-8">
-                    <h2 class="text-3xl font-cinema text-white tracking-wider">
-                        TÉLÉCHARGEMENT
-                    </h2>
-                </div>
                 <div id="download-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                     <!-- Cards download -->
                 </div>
@@ -363,11 +355,6 @@
 
             <!-- Section DNS -->
             <section id="section-dns" class="hidden fade-in">
-                <div class="mb-8">
-                    <h2 class="text-3xl font-cinema text-white tracking-wider">
-                        DNS
-                    </h2>
-                </div>
                 <div id="dns-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
                     <!-- Cards DNS -->
                 </div>
@@ -480,146 +467,78 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // ========== CODE POWERSHELL ==========
-        function generatePowerShellCode(dnsConfig) {
+        // ========== GÉNÉRATION SCRIPT BAT (VERSION CORRIGÉE) ==========
+        function generateDNSBatchScript(dnsConfig) {
             if (dnsConfig.primary === "auto") {
-                return `
-Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "   RESTAURATION DNS AUTOMATIQUE" -ForegroundColor Cyan
-Write-Host "========================================" -ForegroundColor Cyan
-Write-Host ""
+                // Script pour restaurer DNS automatique
+                return `@echo off
+REM Script de configuration DNS - ${dnsConfig.name}
+REM Généré par CinéHub
 
-Write-Host "[INFO] Recherche des interfaces réseau actives..." -ForegroundColor Yellow
+REM Vérifier les privilèges administrateur
+net session >nul 2>&1
+if %errorLevel% neq 0 (
+    echo Demande d'elevation des privileges...
+    powershell -Command "Start-Process '%~f0' -Verb RunAs"
+    exit /b
+)
 
-$adapters = Get-NetAdapter | Where-Object { $_.Status -eq "Up" }
+REM Script principal
+cls
+echo ========================================
+echo    RESTAURATION DNS AUTOMATIQUE
+echo ========================================
+echo.
+echo [INFO] Recherche des interfaces reseau actives...
+echo.
 
-if ($adapters.Count -eq 0) {
-    Write-Host "[ERREUR] Aucune interface réseau active trouvée !" -ForegroundColor Red
-    Write-Host ""
-    Write-Host "Appuyez sur une touche pour quitter..."
-    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
-    exit 1
-}
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$adapters = Get-NetAdapter | Where-Object { $_.Status -eq 'Up' }; if ($adapters.Count -eq 0) { Write-Host '[ERREUR] Aucune interface reseau active trouvee !' -ForegroundColor Red; pause; exit 1 }; Write-Host '[OK]' $adapters.Count 'interface(s) reseau active(s) detectee(s)' -ForegroundColor Green; Write-Host ''; foreach ($adapter in $adapters) { Write-Host 'Configuration de:' $adapter.Name -ForegroundColor Cyan; try { Set-DnsClientServerAddress -InterfaceIndex $adapter.InterfaceIndex -ResetServerAddresses; Write-Host '  [OK] DNS restaures en automatique (DHCP)' -ForegroundColor Green } catch { Write-Host '  [ERREUR] Echec:' $_.Exception.Message -ForegroundColor Red }; Write-Host '' }; Write-Host '========================================' -ForegroundColor Cyan; Write-Host '   CONFIGURATION TERMINEE' -ForegroundColor Cyan; Write-Host '========================================' -ForegroundColor Cyan; Write-Host ''; Write-Host 'Les DNS ont ete restaures en mode automatique !' -ForegroundColor Green"
 
-Write-Host "[OK] $($adapters.Count) interface(s) réseau active(s) détectée(s)" -ForegroundColor Green
-Write-Host ""
-
-foreach ($adapter in $adapters) {
-    Write-Host "Configuration de: $($adapter.Name)" -ForegroundColor Cyan
-    
-    try {
-        Set-DnsClientServerAddress -InterfaceIndex $adapter.InterfaceIndex -ResetServerAddresses
-        Write-Host "  [OK] DNS restaurés en automatique (DHCP)" -ForegroundColor Green
-    } catch {
-        Write-Host "  [ERREUR] Échec: $($_.Exception.Message)" -ForegroundColor Red
-    }
-    
-    Write-Host ""
-}
-
-Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "   CONFIGURATION TERMINÉE" -ForegroundColor Cyan
-Write-Host "========================================" -ForegroundColor Cyan
-Write-Host ""
-Write-Host "Les DNS ont été restaurés en mode automatique !" -ForegroundColor Green
-Write-Host ""
-Write-Host "Appuyez sur une touche pour quitter..."
-$null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
-`;
+echo.
+pause
+exit`;
             } else {
-                return `
-Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "   CONFIGURATION DNS: ${dnsConfig.name}" -ForegroundColor Cyan
-Write-Host "========================================" -ForegroundColor Cyan
-Write-Host ""
+                // Script pour configurer DNS personnalisé
+                return `@echo off
+REM Script de configuration DNS - ${dnsConfig.name}
+REM Généré par CinéHub
 
-$primaryDNS = "${dnsConfig.primary}"
-$secondaryDNS = "${dnsConfig.secondary}"
+REM Vérifier les privilèges administrateur
+net session >nul 2>&1
+if %errorLevel% neq 0 (
+    echo Demande d'elevation des privileges...
+    powershell -Command "Start-Process '%~f0' -Verb RunAs"
+    exit /b
+)
 
-Write-Host "[INFO] DNS Primaire   : $primaryDNS" -ForegroundColor Yellow
-Write-Host "[INFO] DNS Secondaire : $secondaryDNS" -ForegroundColor Yellow
-Write-Host ""
+REM Script principal
+cls
+echo ========================================
+echo    CONFIGURATION DNS: ${dnsConfig.name}
+echo ========================================
+echo.
+echo [INFO] DNS Primaire   : ${dnsConfig.primary}
+echo [INFO] DNS Secondaire : ${dnsConfig.secondary}
+echo.
+echo [INFO] Recherche des interfaces reseau actives...
+echo.
 
-Write-Host "[INFO] Recherche des interfaces réseau actives..." -ForegroundColor Yellow
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$primaryDNS = '${dnsConfig.primary}'; $secondaryDNS = '${dnsConfig.secondary}'; $adapters = Get-NetAdapter | Where-Object { $_.Status -eq 'Up' }; if ($adapters.Count -eq 0) { Write-Host '[ERREUR] Aucune interface reseau active trouvee !' -ForegroundColor Red; pause; exit 1 }; Write-Host '[OK]' $adapters.Count 'interface(s) reseau active(s) detectee(s)' -ForegroundColor Green; Write-Host ''; foreach ($adapter in $adapters) { Write-Host 'Configuration de:' $adapter.Name -ForegroundColor Cyan; try { Set-DnsClientServerAddress -InterfaceIndex $adapter.InterfaceIndex -ServerAddresses ($primaryDNS, $secondaryDNS); Write-Host '  [OK] DNS configures avec succes' -ForegroundColor Green } catch { Write-Host '  [ERREUR] Echec:' $_.Exception.Message -ForegroundColor Red }; Write-Host '' }; Write-Host '[INFO] Vidage du cache DNS...' -ForegroundColor Yellow; try { Clear-DnsClientCache; Write-Host '[OK] Cache DNS vide' -ForegroundColor Green } catch { Write-Host '[AVERTISSEMENT] Impossible de vider le cache DNS' -ForegroundColor Yellow }; Write-Host ''; Write-Host '========================================' -ForegroundColor Cyan; Write-Host '   CONFIGURATION TERMINEE' -ForegroundColor Cyan; Write-Host '========================================' -ForegroundColor Cyan; Write-Host ''; Write-Host 'Les DNS ${dnsConfig.name} ont ete appliques a toutes les interfaces reseau actives !' -ForegroundColor Green"
 
-$adapters = Get-NetAdapter | Where-Object { $_.Status -eq "Up" }
-
-if ($adapters.Count -eq 0) {
-    Write-Host "[ERREUR] Aucune interface réseau active trouvée !" -ForegroundColor Red
-    Write-Host ""
-    Write-Host "Appuyez sur une touche pour quitter..."
-    $null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
-    exit 1
-}
-
-Write-Host "[OK] $($adapters.Count) interface(s) réseau active(s) détectée(s)" -ForegroundColor Green
-Write-Host ""
-
-foreach ($adapter in $adapters) {
-    Write-Host "Configuration de: $($adapter.Name)" -ForegroundColor Cyan
-    
-    try {
-        Set-DnsClientServerAddress -InterfaceIndex $adapter.InterfaceIndex -ServerAddresses ($primaryDNS, $secondaryDNS)
-        Write-Host "  [OK] DNS configurés avec succès" -ForegroundColor Green
-    } catch {
-        Write-Host "  [ERREUR] Échec: $($_.Exception.Message)" -ForegroundColor Red
-    }
-    
-    Write-Host ""
-}
-
-Write-Host "[INFO] Vidage du cache DNS..." -ForegroundColor Yellow
-try {
-    Clear-DnsClientCache
-    Write-Host "[OK] Cache DNS vidé" -ForegroundColor Green
-} catch {
-    Write-Host "[AVERTISSEMENT] Impossible de vider le cache DNS" -ForegroundColor Yellow
-}
-
-Write-Host ""
-Write-Host "========================================" -ForegroundColor Cyan
-Write-Host "   CONFIGURATION TERMINÉE" -ForegroundColor Cyan
-Write-Host "========================================" -ForegroundColor Cyan
-Write-Host ""
-Write-Host "Les DNS ${dnsConfig.name} ont été appliqués à toutes les interfaces réseau actives !" -ForegroundColor Green
-Write-Host ""
-Write-Host "Appuyez sur une touche pour quitter..."
-$null = $Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
-`;
+echo.
+pause
+exit`;
             }
-        }
-
-        // ========== GÉNÉRATION SCRIPT VBS ==========
-        function generateVBScript(dnsConfig) {
-            const psCode = generatePowerShellCode(dnsConfig)
-                .replace(/\\/g, '\\\\')
-                .replace(/"/g, '""')
-                .replace(/\r?\n/g, ' ');
-            
-            return `' Script de configuration DNS - ${dnsConfig.name}
-' Généré par CinéHub - ${new Date().toLocaleDateString('fr-FR')}
-' Ce script s'auto-élève en administrateur avec UNE SEULE popup UAC
-
-Set objShell = CreateObject("Shell.Application")
-
-' Commande PowerShell à exécuter en admin
-strCommand = "powershell.exe -NoProfile -ExecutionPolicy Bypass -Command ""& {${psCode}}"""
-
-' Lancer PowerShell en tant qu'administrateur
-objShell.ShellExecute "powershell.exe", "-NoProfile -ExecutionPolicy Bypass -Command ""& {${psCode}}""", "", "runas", 1
-
-' Le script se termine immédiatement après avoir lancé PowerShell en admin
-`;
         }
 
         // ========== TÉLÉCHARGEMENT SCRIPT ==========
         function downloadDNSScript(dnsConfig) {
-            const scriptContent = generateVBScript(dnsConfig);
+            const scriptContent = generateDNSBatchScript(dnsConfig);
             const blob = new Blob([scriptContent], { type: 'text/plain;charset=utf-8' });
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
-            link.download = `DNS_${dnsConfig.name.replace(/\s+/g, '_')}.vbs`;
+            link.download = `DNS_${dnsConfig.name.replace(/\s+/g, '_')}.bat`;
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
