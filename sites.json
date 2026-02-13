@@ -6,7 +6,7 @@
       "description": "",
       "type": "streaming",
       "color": "#e50914",
-      "favicon": "🎬"
+      "rating": 5
     },
     {
       "name": "PurStream",
@@ -14,7 +14,7 @@
       "description": "",
       "type": "streaming",
       "color": "#ffd700",
-      "favicon": "🍿"
+      "rating": 4
     },
     {
       "name": "NoctaFlix",
@@ -22,7 +22,7 @@
       "description": "",
       "type": "streaming",
       "color": "#ff6b9d",
-      "favicon": "📺"
+      "rating": 1
     },
     {
       "name": "Coflix",
@@ -30,7 +30,7 @@
       "description": "",
       "type": "streaming",
       "color": "#00d9ff",
-      "favicon": "⭐"
+      "rating": 2
     },
     {
       "name": "Sakmad",
@@ -46,7 +46,7 @@
       "description": "",
       "type": "streaming",
       "color": "#ff4757",
-      "favicon": "✨​"
+      "rating": 5
     },
     {
       "name": "MoiFlix",
@@ -54,7 +54,7 @@
       "description": "",
       "type": "streaming",
       "color": "#ff4757",
-      "favicon": "💯"
+      "rating": 5
     },
     {
       "name": "DarkiWorld",
@@ -62,7 +62,7 @@
       "description": "",
       "type": "download",
       "color": "#a855f7",
-      "favicon": "⚡"
+      "rating": 5
     },
     {
       "name": "Wawacity",
@@ -70,7 +70,7 @@
       "description": "",
       "type": "download",
       "color": "#06b6d4",
-      "favicon": "📦"
+      "rating": 5
     },
     {
       "name": "ExtremeDownload",
@@ -78,10 +78,11 @@
       "description": "",
       "type": "download",
       "color": "#f97316",
-      "favicon": "💾"
+      "rating": 5
     }
   ]
 }
+
 
 
 
