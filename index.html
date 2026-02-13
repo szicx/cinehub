@@ -94,6 +94,47 @@
             padding: 40px 1rem;
         }
         
+        /* ========== EFFET RAINBOW UNIFORME SUR "CINÉ" ========== */
+        
+        .rainbow-text {
+            animation: rainbow-color 8s linear infinite;
+        }
+        
+        @keyframes rainbow-color {
+            0% {
+                color: #ff0000;
+                text-shadow: 0 0 20px rgba(255, 0, 0, 0.8), 0 0 40px rgba(255, 0, 0, 0.4);
+            }
+            14.28% {
+                color: #ff7f00;
+                text-shadow: 0 0 20px rgba(255, 127, 0, 0.8), 0 0 40px rgba(255, 127, 0, 0.4);
+            }
+            28.56% {
+                color: #ffff00;
+                text-shadow: 0 0 20px rgba(255, 255, 0, 0.8), 0 0 40px rgba(255, 255, 0, 0.4);
+            }
+            42.84% {
+                color: #00ff00;
+                text-shadow: 0 0 20px rgba(0, 255, 0, 0.8), 0 0 40px rgba(0, 255, 0, 0.4);
+            }
+            57.12% {
+                color: #00ffff;
+                text-shadow: 0 0 20px rgba(0, 255, 255, 0.8), 0 0 40px rgba(0, 255, 255, 0.4);
+            }
+            71.4% {
+                color: #0000ff;
+                text-shadow: 0 0 20px rgba(0, 0, 255, 0.8), 0 0 40px rgba(0, 0, 255, 0.4);
+            }
+            85.68% {
+                color: #8b00ff;
+                text-shadow: 0 0 20px rgba(139, 0, 255, 0.8), 0 0 40px rgba(139, 0, 255, 0.4);
+            }
+            100% {
+                color: #ff0000;
+                text-shadow: 0 0 20px rgba(255, 0, 0, 0.8), 0 0 40px rgba(255, 0, 0, 0.4);
+            }
+        }
+        
         /* ========== TABS ========== */
         
         .tab-button {
@@ -155,6 +196,37 @@
             animation: fadeIn 0.4s ease-out;
         }
         
+        /* ========== ANIMATION FLOTTANTE EMOJIS ========== */
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+            25% {
+                transform: translateY(-8px) rotate(2deg);
+            }
+            50% {
+                transform: translateY(-12px) rotate(-2deg);
+            }
+            75% {
+                transform: translateY(-8px) rotate(1deg);
+            }
+        }
+        
+        .floating-emoji {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        .floating-emoji-delay-1 {
+            animation: float 3.5s ease-in-out infinite;
+            animation-delay: 0.2s;
+        }
+        
+        .floating-emoji-delay-2 {
+            animation: float 3.2s ease-in-out infinite;
+            animation-delay: 0.4s;
+        }
+        
         /* ========== CARDS ========== */
         
         .cinema-card {
@@ -175,6 +247,7 @@
             height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
             transition: left 0.5s;
+            pointer-events: none;
         }
         
         .cinema-card:hover::before {
@@ -187,6 +260,12 @@
             box-shadow: 
                 0 20px 40px rgba(0, 0, 0, 0.6),
                 0 0 0 1px rgba(255, 255, 255, 0.1);
+        }
+        
+        .cinema-card:hover .floating-emoji,
+        .cinema-card:hover .floating-emoji-delay-1,
+        .cinema-card:hover .floating-emoji-delay-2 {
+            animation-play-state: running;
         }
         
         /* ========== GLOW EFFECTS ========== */
@@ -311,7 +390,7 @@
             <div class="flex items-center justify-between mb-4">
                 <div>
                     <h1 class="text-5xl font-cinema tracking-wider">
-                        <span class="text-accent-primary accent-glow">CINÉ</span><span class="text-white">HUB</span>
+                        <span class="rainbow-text">CINÉ</span><span class="text-white">HUB</span>
                     </h1>
                 </div>
                 <div class="hidden md:flex items-center gap-2">
@@ -628,9 +707,13 @@ exit`;
             const badgeText = site.type === 'streaming' ? 'STREAMING' : 'DOWNLOAD';
 
             const favicon = site.favicon || (site.type === 'streaming' ? '🎬' : '📥');
+            
+            // Choisir une classe d'animation aléatoire
+            const floatClass = ['floating-emoji', 'floating-emoji-delay-1', 'floating-emoji-delay-2'][index % 3];
+            
             const faviconHTML = site.favicon && site.favicon.startsWith('http') 
-                ? `<img src="${site.favicon}" alt="${site.name}" class="w-10 h-10 rounded object-cover">`
-                : `<div class="text-4xl">${favicon}</div>`;
+                ? `<img src="${site.favicon}" alt="${site.name}" class="w-10 h-10 rounded object-cover ${floatClass}">`
+                : `<div class="text-4xl ${floatClass}">${favicon}</div>`;
 
             const titleColor = site.color || '#ffffff';
 
@@ -682,6 +765,9 @@ exit`;
             card.className = 'cinema-card rounded-xl p-6 fade-in-up group cursor-pointer';
             card.style.animationDelay = `${index * 0.05}s`;
 
+            // Choisir une classe d'animation aléatoire
+            const floatClass = ['floating-emoji', 'floating-emoji-delay-1', 'floating-emoji-delay-2'][index % 3];
+
             card.innerHTML = `
                 <div class="flex flex-col h-full">
                     
@@ -695,7 +781,7 @@ exit`;
                     
                     <!-- Icon -->
                     <div class="mb-4 transform group-hover:scale-110 transition-transform duration-300">
-                        <div class="text-4xl">${dns.icon}</div>
+                        <div class="text-4xl ${floatClass}">${dns.icon}</div>
                     </div>
 
                     <!-- Title -->
