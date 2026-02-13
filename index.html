@@ -59,8 +59,22 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
         
+        /* ========== FOOTER FIXE ========== */
+        
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            backdrop-filter: blur(20px);
+            background: rgba(10, 10, 15, 0.85);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
         main {
-            margin-top: 180px; /* Hauteur du header */
+            margin-top: 200px; /* Espace pour le header */
+            margin-bottom: 60px; /* Espace pour le footer */
         }
         
         /* ========== TABS ========== */
@@ -257,7 +271,8 @@
         
         @media (max-width: 768px) {
             main {
-                margin-top: 200px;
+                margin-top: 220px;
+                margin-bottom: 60px;
             }
             
             .tab-button {
@@ -363,9 +378,9 @@
         </div>
     </main>
 
-    <!-- Footer -->
-    <footer class="relative z-10 border-t border-white/5 py-6 mt-20">
-        <div class="container mx-auto px-4 text-center">
+    <!-- Footer Fixe -->
+    <footer>
+        <div class="container mx-auto px-4 py-4 text-center">
             <p class="text-gray-600 text-xs">
                 CinéHub © 2026
             </p>
@@ -800,4 +815,3 @@ objShell.ShellExecute "powershell.exe", "-NoProfile -ExecutionPolicy Bypass -Com
 
 </body>
 </html>
-
